@@ -1,3 +1,7 @@
+export enum TestMode {
+    target_url="target_url",
+    sitemap="sitemap"
+}
 export enum DbSchema {
     metric="stress_tests"
 }
@@ -13,6 +17,7 @@ export interface IOptions extends IThreadOptions{
 
 export interface IThreadOptions {
     readonly rps: number
+    readonly testMode: TestMode
     readonly rampApPeriodSec: number
     readonly testDurationSec: number
 }

@@ -1,31 +1,38 @@
-import {IOptions, IRequest, MyMethod} from "./i/i.structures";
-import {Thread} from "./modules/thread/thread";
+import {IOptions, TestMode} from "./i/i.structures";
+import {MyTest} from "./modules/my.test";
 
 require("dotenv").config({path:".env.public"})
 require("dotenv").config({path:".env.private"})
 
-async function run(): Promise<void> {
-    const options = createOptions()
-    const request = createRequest()
-    const thread = Thread.create(options, request)
-    await thread.run()
+// @ts-ignore
+async function sitemapTest(): Promise<void> {
+    const options = createOptions(TestMode.sitemap)
+    const urls = [process.env.SITEMAP_URL || ""]
+    await new MyTest(options, urls).start()
+    console.log("\nEND")
+    process.exit()
+}
+
+// @ts-ignore
+async function targetUrlTest(): Promise<void> {
+    const options = createOptions(TestMode.target_url)
+    const urls = [process.env.TARGET_URL || ""]
+    await new MyTest(options, urls).start()
     console.log("\nEND")
     process.exit()
 }
 
 
-run()
+targetUrlTest()
+// sitemapTest()
 
 
-function createOptions(): IOptions {
+function createOptions(testMode: TestMode): IOptions {
     return {
-        rampApPeriodSec: 40,
-        rps: 50,
-        testDurationSec: 60,
-        threads: 1
+        rampApPeriodSec: 640,
+        rps: 80,
+        testDurationSec: 700,
+        threads: 1,
+        testMode
     }
-}
-
-function createRequest(): IRequest {
-    return {createdAt: new Date(), method: MyMethod.GET, url: process.env.TARGET_URL || ""}
 }

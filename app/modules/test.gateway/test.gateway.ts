@@ -1,23 +1,24 @@
 import axios from "axios"
-import {IGateway} from "../../i/gateway/i.gateway";
+import {ITestGateway} from "../../i/test.gateway/i.test.gateway";
 import {IAnswer, IRequest} from "../../i/i.structures";
 
-export class Gateway implements IGateway {
+export class TestGateway implements ITestGateway {
     async request(request: IRequest): Promise<IAnswer> {
-        const answer = await Gateway.axRequest(request)
-        return Gateway.answerFormatting(request, answer)
+        const answer = await TestGateway.axRequest(request)
+        return TestGateway.answerFormatting(request, answer)
     }
 
     private static async axRequest(request: IRequest): Promise<any> {
         try {
             return await axios({method: request.method, url: request.url})
         } catch (error) {
+            console.error(error)
             return typeof error === "object" && error?.response ? error?.response : error
         }
     }
 
     private static answerFormatting(request: IRequest, answer: any): IAnswer {
-        return Gateway.isInnerError(answer) ? Gateway.innerErrorAnswer(request, answer) : Gateway.outerAnswer(request, answer)
+        return TestGateway.isInnerError(answer) ? TestGateway.innerErrorAnswer(request, answer) : TestGateway.outerAnswer(request, answer)
     }
 
     private static innerErrorAnswer(request: IRequest, error: any): IAnswer {

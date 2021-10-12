@@ -1,4 +1,4 @@
-import {IAnswer, IOptions, IRequest, MyMethod} from "../app/i/i.structures";
+import {IAnswer, IOptions, IRequest, MyMethod, TestMode} from "../app/i/i.structures";
 
 export function testAnswer(method: MyMethod): IAnswer {
     return {
@@ -13,6 +13,6 @@ export function testRequest(method: MyMethod): IRequest {
     return {createdAt: new Date(), method: MyMethod.GET, url: "https://www.google.by/"}
 }
 
-export function testOptions(): IOptions {
-    return {rampApPeriodSec: 2, testDurationSec: 3, rps: 2, threads: 1}
+export function testOptions(testMode: TestMode): IOptions {
+    return {rampApPeriodSec: 4, testDurationSec: 5, rps: 2, threads: 1, testMode}
 }

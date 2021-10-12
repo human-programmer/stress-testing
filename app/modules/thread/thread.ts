@@ -1,13 +1,13 @@
 import {IThread} from "../../i/thread/i.thread";
-import {IRequest, IThreadOptions} from "../../i/i.structures";
-import {IGateway} from "../../i/gateway/i.gateway";
+import {IRequest, IThreadOptions, MyMethod} from "../../i/i.structures";
+import {ITestGateway} from "../../i/test.gateway/i.test.gateway";
 import {IDb} from "../../i/db/i.db";
-import {Gateway} from "../gateway/gateway";
+import {TestGateway} from "../test.gateway/test.gateway";
 import {PgDb} from "../db/pg.db";
 
 export class Thread implements IThread {
-    static create(options: IThreadOptions, request: IRequest): IThread {
-        return new Thread(options, request, new Gateway(), new PgDb())
+    static create(options: IThreadOptions, urls: string[], method: MyMethod): IThread {
+        return new Thread(options, urls, method, new TestGateway(), new PgDb())
     }
 
     private currentIteration: number = 0
@@ -18,12 +18,15 @@ export class Thread implements IThread {
     private intervalId: any
     private resolvePromise: any
     private readonly iterations: any[] = []
+    private readonly carousel: Carousel
 
     constructor(private readonly threadOptions: IThreadOptions,
-                private readonly request: IRequest,
-                private readonly gateway: IGateway,
+                urls: string[],
+                private readonly method: MyMethod,
+                private readonly gateway: ITestGateway,
                 private readonly db: IDb) {
         this.boost = this.threadOptions.rps / this.threadOptions.testDurationSec
+        this.carousel = new Carousel(urls)
     }
     async run(): Promise<void> {
         this.intervalId = setInterval(() => this.startIteration(), 1000)
@@ -49,13 +52,13 @@ export class Thread implements IThread {
     private async executeIteration(): Promise<void> {
         let rps = this.requestsQuantity
         console.log("executeIteration rps:", rps, "/", this.threadOptions.rps)
-        const promises: any[] = [], request = this.clonedRequest()
-        while (rps--){promises.push(this.sendRequest(request))}
+        const promises: any[] = [], createdAt = new Date()
+        while (rps--){promises.push(this.sendRequest(this.clonedRequest(createdAt)))}
         await Promise.all(promises)
     }
 
-    private clonedRequest(): IRequest {
-        return {...this.request, createdAt: new Date()}
+    private clonedRequest(createdAt: Date): IRequest {
+        return {createdAt, method: this.method, url: this.carousel.nextUrl}
     }
 
     private checkIteration(): void {
@@ -91,5 +94,19 @@ export class Thread implements IThread {
 
     get endedRequests(): number {
         return this.endedRequestsCounter
+    }
+}
+
+class Carousel {
+    private index: number = 0
+    constructor(private readonly urls: string[]) {}
+
+    get nextUrl(): string {
+        return this.urls[this.nextIndex]
+    }
+
+    private get nextIndex(): number {
+        if(this.index >= this.urls.length) this.index = 0
+        return this.index++
     }
 }
