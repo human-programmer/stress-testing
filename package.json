@@ -1,0 +1,42 @@
+{
+  "name": "stress-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "mocha",
+    "start": "ts-node ./app/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/human-programmer/stress-testing.git"
+  },
+  "keywords": [
+    "stress",
+    "testing",
+    "nodejs"
+  ],
+  "author": "Nikolay Puliyak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/human-programmer/stress-testing/issues"
+  },
+  "homepage": "https://github.com/human-programmer/stress-testing#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.10.3",
+    "chai": "^4.3.4",
+    "esm": "^3.2.25",
+    "mocha": "^9.1.2",
+    "ts-node": "^10.2.1"
+  },
+  "dependencies": {
+    "@types/es6-promise": "^3.3.0",
+    "axios": "^0.22.0",
+    "dotenv": "^10.0.0",
+    "pg": "^8.7.1",
+    "pg-format": "^1.0.4",
+    "typescript": "^4.4.3"
+  }
+}

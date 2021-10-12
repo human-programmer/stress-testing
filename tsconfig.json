@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "allowJs": false,
+        "alwaysStrict": true,
+        "checkJs": false,
+        "downlevelIteration": false,
+        "importHelpers": false,
+        "noEmitOnError": false,
+        "noEmitHelpers": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "noImplicitUseStrict": false,
+        "pretty": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "strict": false,
+        "noImplicitAny": false,
+        "strictNullChecks": true,
+        "target": "es2020",
+        "watch": false,
+        "outDir": "./build",
+        "rootDirs": [
+            "app"
+        ],
+
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "types": [
+            "@types/node",
+            "@types/mocha",
+        ]
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
+
